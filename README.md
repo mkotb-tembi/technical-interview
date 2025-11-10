@@ -10,8 +10,6 @@ This Python script implements a simple ETL pipeline for web scraping, including 
 
 - **LRU Cache** → Caches recent results to avoid repeated fetches.
 
-- **Rate Limiter** → Prevents too many requests per user.
-
 - **KV Store** → Stores results with optional expiry and automatic cleanup.
 
 **Usage**
