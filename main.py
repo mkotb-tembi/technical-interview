@@ -127,7 +127,7 @@ def main():
         "https://example.com",
         "https://www.python.org",
         "https://www.wikipedia.org",
-        "https://example.com",  # duplicate to test cache
+        "https://example.com",
     ]
     for u in urls:
         result = etl.process(u, user="senior_dev")
