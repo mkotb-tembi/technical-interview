@@ -19,22 +19,6 @@ class LRUCache:
         if len(self.cache) > self.size:
             self.cache.popitem(last=False)
 
-class RateLimiter:
-    def __init__(self, limit=3, window=10):
-        self.limit = limit
-        self.window = window
-        self.user_requests = {}
-
-    def allow(self, user):
-        now = time.time()
-        q = self.user_requests.setdefault(user, deque())
-        while q and now - q[0] > self.window:
-            q.popleft()
-        if len(q) < self.limit:
-            q.append(now)
-            return True
-        return False
-
 class KVStore:
     def __init__(self):
         self.data = {}
@@ -89,16 +73,12 @@ class Loader:
 class ScraperETL:
     def __init__(self):
         self.cache = LRUCache()
-        self.rate = RateLimiter()
         self.extractor = Extractor()
         self.transformer = Transformer()
         self.store = KVStore()
         self.loader = Loader(self.store)
 
-    def process(self, url, user="guest"):
-        if not self.rate.allow(user):
-            print(f"[WARN] Rate limit exceeded for {user}")
-            return None
+    def process(self, url):
 
         # Cache check
         cached = self.cache.get(url)
@@ -130,7 +110,7 @@ def main():
         "https://example.com",
     ]
     for u in urls:
-        result = etl.process(u, user="senior_dev")
+        result = etl.process(u)
         time.sleep(random.uniform(0.5, 1.5))
 
     print("\n[STORE CONTENTS]")
